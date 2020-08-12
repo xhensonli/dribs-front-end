@@ -1,0 +1,111 @@
+@font-face {
+  font-family: 'dribs_fonts';
+  src:  url('fonts/dribs_fonts.eot?vm5vt3');
+  src:  url('fonts/dribs_fonts.eot?vm5vt3#iefix') format('embedded-opentype'),
+    url('fonts/dribs_fonts.ttf?vm5vt3') format('truetype'),
+    url('fonts/dribs_fonts.woff?vm5vt3') format('woff'),
+    url('fonts/dribs_fonts.svg?vm5vt3#dribs_fonts') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'dribs_fonts' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-add:before {
+  content: "\e900";
+}
+.icon-appreciate:before {
+  content: "\e901";
+}
+.icon-at:before {
+  content: "\e902";
+}
+.icon-comment:before {
+  content: "\e903";
+}
+.icon-community:before {
+  content: "\e904";
+}
+.icon-communityfill:before {
+  content: "\e905";
+}
+.icon-delete:before {
+  content: "\e906";
+}
+.icon-edit:before {
+  content: "\e907";
+}
+.icon-female:before {
+  content: "\e908";
+}
+.icon-footprint:before {
+  content: "\e909";
+}
+.icon-forward:before {
+  content: "\e90a";
+}
+.icon-friend:before {
+  content: "\e90b";
+}
+.icon-friendadd:before {
+  content: "\e90c";
+}
+.icon-friendaddfill:before {
+  content: "\e90d";
+}
+.icon-friendfavor:before {
+  content: "\e90e";
+}
+.icon-friendfill:before {
+  content: "\e90f";
+}
+.icon-home:before {
+  content: "\e910";
+}
+.icon-homefill:before {
+  content: "\e911";
+}
+.icon-like:before {
+  content: "\e912";
+}
+.icon-likefill:before {
+  content: "\e913";
+}
+.icon-male:before {
+  content: "\e914";
+}
+.icon-message:before {
+  content: "\e915";
+}
+.icon-people:before {
+  content: "\e916";
+}
+.icon-peoplefill:before {
+  content: "\e917";
+}
+.icon-pic:before {
+  content: "\e918";
+}
+.icon-roundclose:before {
+  content: "\e919";
+}
+.icon-search:before {
+  content: "\e91a";
+}
+.icon-text:before {
+  content: "\e91b";
+}
