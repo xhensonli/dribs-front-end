@@ -6,25 +6,64 @@
           <el-header id="header" ref="fixedBar" :class="{'header-fix':isFix}">
               <!--{{resourcePath+$store.state.loginInfo.user.userAvatar}}-->
               <!--{{$store.state.loginInfo.isLogin}}-->
-              <el-col :span="3" :push="21">
+              <div id="menu-wrap">
+                  <el-menu  mode="horizontal"
+                            background-color="#008080"
+                            text-color="#fff"
+                            active-text-color="#ffd04b">
+                      <el-menu-item @click="goIndex" >
+                          <template slot="title">
+                              <i class="icon-home"></i>
+                              <span>首页</span>
+                          </template>
+                      </el-menu-item>
+                      <el-menu-item index="2">
+                          <template slot="title">
+                              <i class="icon-friendfavor"></i>
+                              <span>我的关注</span>
+                          </template>
+                      </el-menu-item>
+                      <el-menu-item index="3" disabled>
+                          <template slot="title">
+                              <i class="icon-message"></i>
+                              <span>消息</span>
+                          </template>
+                      </el-menu-item>
+                      <el-submenu index="4">
+                          <template slot="title">
+                              <i class="icon-people"></i>
+                              <span>个人中心</span>
+                          </template>
+                          <el-menu-item @click="goProfile" >
+                              我的主页
+                          </el-menu-item>
+                          <el-menu-item @click="" >
+                              个人信息
+                          </el-menu-item>
+                      </el-submenu>
+                  </el-menu>
+              </div>
+              <el-col :span="3" :push="12">
                   <el-popover trigger="hover" v-if="$store.state.loginInfo.isLogin">
                       <div id="header-user-username">
                           Lv.{{$store.state.loginInfo.user.userLevel}}
                           {{$store.state.loginInfo.user.userName}}
                           <i class="icon-male" v-if="$store.state.loginInfo.user.userInfo.male" style="color: dodgerblue"></i>
                           <i class="icon-female" v-else style="color: hotpink"></i>
+                          <el-link @click="logout">注销登录</el-link>
                       </div>
                       <el-avatar :size="48" slot="reference" :src="resourcePath+$store.state.loginInfo.user.userAvatar" style="margin-top:5px;"/>
                   </el-popover>
                   <el-popover trigger="hover" v-else title="未登录">
                       <el-link @click="toLogin">去登录</el-link>
+
                       <el-avatar :size="48" slot="reference" :src="resourcePath+'default.jpg'" style="margin-top:5px;"/>
                   </el-popover>
               </el-col>
           </el-header>
       </div>
       <div id="app-content">
-          <router-view :key="$route.fullPath"/>
+          <router-view />
       </div>
 
       <el-footer id="app-footer" class="clearfix" height="50px">
@@ -38,6 +77,8 @@ import HelloWorld from './components/HelloWorld.vue'
 import RegisterController from "./components/register/RegisterController.vue"
 import LoginController from "./components/login/LoginController"
 import UserController from "./components/user/UserController"
+import {request} from "./network/request";
+
 export default {
   name: 'app',
   components: {
@@ -74,6 +115,31 @@ export default {
                   pathQuery: this.$route.query
               }
           })
+      },
+      goProfile(){
+          // console.log("pro");
+          this.checkAndAction( () => {
+              this.$router.push({
+                  path: '/user/blogs',
+                  query: {
+                      userId: this.$store.state.loginInfo.user.userId,
+                      infoType: 'blogs',
+                      currentPage: 1
+                  }
+              })
+          }, this.$route.path, this.$route.query);
+      },
+      goIndex(){
+          this.$router.push("/home/index")
+      },
+      logout(){
+          request({
+              url: 'user/logout'
+          }).then( res => {
+              console.log(res);
+          }).catch( err => {
+              console.log(err);
+          })
       }
   }
 }
@@ -106,6 +172,15 @@ export default {
         z-index: 5;
         background-color: teal;
         margin-bottom: 10px;
+        #menu-wrap{
+            width: 600px;
+            float: left;
+            [class^="icon-"]{
+                margin-left: 5px;
+                margin-right: 10px;
+                color: #eee;
+            }
+        }
     }
 
     .header-fix{

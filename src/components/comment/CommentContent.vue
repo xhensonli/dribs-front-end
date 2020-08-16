@@ -19,9 +19,10 @@
 <style scoped>
     .comment-content{
         padding: 15px;
-        min-height: 70px;
-        border-top: 1px solid #ddd;
+        min-height:70px;
+        word-wrap:break-word;
+        /*border-top: 1px solid #ddd;*/
         border-bottom: 1px solid #ddd;
-        white-space: pre;
+        white-space: pre-wrap;
     }
 </style>

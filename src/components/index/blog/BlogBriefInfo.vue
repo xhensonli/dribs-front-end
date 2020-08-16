@@ -58,9 +58,10 @@
             },
             showBlogDetail(id){
                 this.$router.push({
-                    path: '/home/index/blogDetail',
+                    path: '/blogDetail',
                     query: {
-                        blogId: this.blog.blogId
+                        blogId: this.blog.blogId,
+                        currentPage: 1
                     }
                 })
             },

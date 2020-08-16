@@ -3,8 +3,9 @@
 
         <!--<div class="comment-user-level"></div>-->
         <div class="comment-user-name" @click="goUserInfo">Lv. {{user.userLevel}} {{user.userName}}</div>
+        <div class="comment-blog-user"v-if="blogOwnerId === user.userId">博主</div>
         <div class="comment-user-owner" v-if="$store.state.loginInfo.isLogin &&
-                        user.userId === $store.state.loginInfo.user.userId">博主</div>
+                        user.userId === $store.state.loginInfo.user.userId">我</div>
     </div>
 </template>
 
@@ -12,6 +13,10 @@
     export default {
         name: "CommentUser",
         props: {
+            blogOwnerId: {
+                type: Number,
+                default: -1
+            },
             user: {
                 type: Object,
                 default: {
@@ -54,7 +59,7 @@
                 }
             }
 
-            &.comment-user-owner{
+            &.comment-user-owner,&.comment-blog-user{
                 font-size: 12px;
                 padding: 2px;
                 border-radius: 2px;

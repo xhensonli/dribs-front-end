@@ -61,7 +61,7 @@
 .blog-content-with-topic{
     cursor: text;
     /*padding: 10px;*/
-    white-space: pre;
+    white-space: pre-wrap;
     line-height: 25px   ;
     /*background-color: #fff;*/
 }

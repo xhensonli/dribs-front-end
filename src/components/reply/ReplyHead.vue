@@ -12,7 +12,8 @@
                     {{getStandardTime(replyTime)}}
                 </div>
             </div>
-            <div class="reply-owner" v-if="$store.state.loginInfo.isLogin && replyer.userId === $store.state.loginInfo.user.userId">博主</div>
+            <div class="reply-blog-user" v-if="blogOwnerId===replyer.userId">博主</div>
+            <div class="reply-owner" v-if="$store.state.loginInfo.isLogin && replyer.userId === $store.state.loginInfo.user.userId">我</div>
             <div class="reply-like-count">
                 <span class="reply-like" v-if="dIsLiked" @click.stop="toggleLike">
                         <i class="icon-likefill " ></i>
@@ -22,6 +23,16 @@
                         <i class="icon-like likeicon" ></i>
                         <span v-if="dLikeCount>0">{{dLikeCount}}</span>
                 </span>
+            </div>
+            <div class="reply-delete" v-if="$store.state.loginInfo.isLogin && replyer.userId === $store.state.loginInfo.user.userId"
+                @click="deleteReply"
+            >
+                <span>
+                    <i class="icon-delete"></i>
+                </span>
+            </div>
+            <div class="reply-add" @click="addReply">
+                <i class="icon-message"></i>
             </div>
         </div>
     </div>
@@ -33,6 +44,10 @@
     export default {
         name: "ReplyHead",
         props: {
+            blogOwnerId: {
+                type: Number,
+                default: -1
+            },
             replyer: {
                 type: Object,
                 default: {
@@ -95,6 +110,22 @@
                         currentPage: 1
                     }
                 })
+            },
+            deleteReply(){
+                this.checkAndAction( () => {
+                    this.$confirm('确定删除吗',{
+                        callback: action => {
+                            if(action === 'confirm'){
+                                this.$emit('deleteReply')
+                            }
+                        }
+                    });
+                }, this.$route.path, this.$route.query)
+            },
+            addReply(){
+                this.checkAndAction( () => {
+                    this.$emit('addReply');
+                },this.$route.path,this.$route.query)
             }
         }
     }
@@ -104,14 +135,14 @@
 
     .reply-head{
         padding: 5px;
-        background-color: #eee;
+        /*background-color: #eee;*/
     }
     .replyer-avatar{
         float: left;
     }
     .reply-info{
         float: left;
-        width: 500px;
+        width: 520px;
 
     }
     .user-and-time{
@@ -131,21 +162,25 @@
         }
 
     }
-    .reply-owner{
+    .reply-owner,.reply-blog-user{
         float: left;
         font-size: 12px;
         padding: 2px;
+        margin-left: 3px;
         border-radius: 2px;
         background-color: teal;
         display: inline-block;
         margin-top: 2px;
         color: white;
     }
-    .reply-like-count{
+    .reply-like-count,.reply-delete,.reply-add{
         float: right;
         color: #888;
         padding: 10px 10px 10px 10px;
         cursor: pointer;
+        &:hover{
+            color: #bbb;
+        }
         .reply-like{
             color: #f88;
         }

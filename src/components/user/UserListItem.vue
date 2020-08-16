@@ -31,7 +31,7 @@
                     path: '/user/blogs',
                     query: {
                         userId: this.user.userId,
-                        type: 'blogs',
+                        infoType: 'blogs',
                         currentPage: 1
                     }
                 })
@@ -42,7 +42,8 @@
 
 <style scoped lang="less">
     .user-list-item{
-        margin: 5px 0 5px 30px;
+        /*margin: 5px 0 5px 30px;*/
+        margin: 5px auto;
         border-radius: 5px;
         height: 40px;
         width: 700px;
@@ -50,6 +51,10 @@
         box-shadow: 0 0 10px #ccc;
         line-height: 40px;
         cursor: pointer;
+        transition: 0.5s;
+        &:hover{
+            zoom: 1.02;
+        }
         &:hover{
             background-color: rgba(0,128,128,.2);
             /*color: #f7f7f7;*/
@@ -69,6 +74,8 @@
                margin-left: 25px;
                 padding: 0 0 5px 10px;
             }
+
+
         }
         .icon{
             margin-left: 5px;

@@ -1,7 +1,7 @@
 <template>
-<div>
-    <el-col :span="18" >
-        <div id="blog-detail-display" v-if="blog!=null"  >
+<div id="blog-detail" class="clearfix" v-if="blog!=null" >
+    <el-col :span="16" >
+        <div id="blog-detail-display"  >
             <BlogBriefInfo :blog="blog" :is-detail="true"
                            :is-profile="$store.state.loginInfo.isLogin == true && blog.author.userId == $store.state.loginInfo.user.userId"
                            @toggleLike="toggleLike()"
@@ -9,10 +9,10 @@
             </BlogBriefInfo>
 
         </div>
-    </el-col>
+
 
     <el-divider/>
-    <el-col :span="18" >
+
         <div id="blog-detail-comment">
             <div id="add-new-comment">
 
@@ -29,6 +29,7 @@
                 <div v-if="commentList.length>0">
                     <Comment v-for="(item,index) in commentList" :key="item.commentId"
                              :comment="item" @deleteComment="deleteComment(index)"
+                             :blog-owner-id="blog.author.userId"
                     />
                     <div class="comment-page-wrap clearfix">
                         <div class="comment-page">
@@ -174,6 +175,20 @@
             Comment
         },
         created() {
+            if(this.$route.query.blogId == null){
+                this.$router.push("/home/index");
+                return;
+            }
+            if(this.$route.query.currentPage == null ){
+                this.$router.push({
+                    path: this.$route.path,
+                    query: {
+                        blogId: this.$route.query.blogId,
+                        currentPage: 1
+                    }
+                })
+                return;
+            }
             this.blogId = this.$route.query.blogId;
             this.loadBlogDetail();
             this.loadCommentList();
@@ -182,9 +197,13 @@
 </script>
 
 <style scoped>
-#blog-detail-display{
-    margin: 20px 0 0  50px;
-}
+
+    #blog-detail{
+        margin-left: 300px;
+    }
+    #blog-detail-display{
+        margin: 20px 0 0  50px;
+    }
 
     #blog-detail-comment{
         margin: 10px 0 0 50px;
@@ -208,7 +227,6 @@
         font-size: 25px;
         text-shadow: 1px 1px 5px #ccc;
     }
-
 
     .comment-page{
        margin: 15px 250px ;

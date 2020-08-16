@@ -58,10 +58,6 @@ Vue.use(VueRouter)
             component: () => import('../components/index/blog/RepostBlog')
           },
           {
-            path: 'blogDetail',
-            meta: { auth: false},
-            component: () => import("../components/index/blog/BlogDetail")
-          },{
             path: 'editBlog',
             meta: {auth: true},
             component: () => import("../components/index/blog/EditBlog")
@@ -110,6 +106,11 @@ Vue.use(VueRouter)
           component: () => import('../components/user/FollowerList')
         }
       ]
+    },
+    {
+      path: '/blogDetail',
+      meta: { auth: false},
+      component: () => import("../components/index/blog/BlogDetail")
     }
 ]
 
@@ -132,6 +133,7 @@ router.beforeEach( (to, from ,next) => {
         MessageBox.confirm("是否前往登录界面", "您尚未登录", {
           callback: (action) => {
             if (action === 'confirm') {
+              window.pageYOffset = document.documentElement.scrollTop = 0;
               next({
                 path: '/login',
                 query:{
@@ -142,9 +144,11 @@ router.beforeEach( (to, from ,next) => {
           }
         });
       } else {
+        window.pageYOffset = document.documentElement.scrollTop = 0;
         next();
       }
     } else {
+      window.pageYOffset = document.documentElement.scrollTop = 0;
       next();
     }
   }).catch( ()=>{

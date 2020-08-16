@@ -38,6 +38,12 @@
         props: {
 
         },
+        watch: {
+          '$route.query.userId'(v){
+              this.userId = Number(v);
+              this.loadBLogs();
+          }
+        },
         methods: {
           changePage(data){
               // this.currentPage = data;
@@ -74,13 +80,13 @@
             }
         },
         created() {
-            console.log(0);
             if(this.$route.query.currentPage == null){
                 this.$router.push({
                     url: '/user/blogs',
                     query: {
                         infoType: 'blog',
-                        currentPage: 1
+                        currentPage: 1,
+                        userId: this.$route.query.userId
                     }
                 });
             }

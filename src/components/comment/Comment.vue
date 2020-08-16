@@ -24,7 +24,7 @@
                     <i class="icon-delete" @click.stop="deleteComment"></i>
                 </div>
                 <div class="blog-comment-info">
-                    <comment-user :user="comment.user"/>
+                    <comment-user :user="comment.user" :blog-owner-id="blogOwnerId"/>
                     <div class="blog-comment-time">
                         {{getStandardTime(comment.commentTime)}}
                     </div>
@@ -46,7 +46,7 @@
             </div>
             <el-collapse-transition>
                 <div class="reply-module-wrap" v-if="showReply">
-                    <reply-module :comment-id="comment.commentId"   @incReply="comment.replyCount++" />
+                    <reply-module :comment-id="comment.commentId"   @incReply="comment.replyCount++" :blog-owner-id="blogOwnerId" />
                 </div>
             </el-collapse-transition>
         </div>
@@ -112,6 +112,10 @@
                         userAvatar: ''
                     }
                 }
+            },
+            blogOwnerId: {
+                type: Number,
+                default: -1
             }
         }
     }
@@ -120,9 +124,10 @@
 <style scoped lang="less">
     .blog-comment{
         background-color: #fff;
-        border-radius: 5px;
-        margin-top: 15px;
-        box-shadow: 0 0 5px #aaa;
+        border-bottom: 1px solid #ddd;
+        /*border-radius: 5px;*/
+        /*margin-top: 15px;*/
+        /*box-shadow: 0 0 5px #aaa;*/
         .blog-comment-other{
             float: left;
             width: 600px;

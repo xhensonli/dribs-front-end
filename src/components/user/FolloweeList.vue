@@ -31,7 +31,8 @@
                 followeeList: [],
                 loading: false,
                 currentPage: 1,
-                totalCount: 0
+                totalCount: 0,
+                userId: 0
             }
         },
         components: {
@@ -43,7 +44,8 @@
                 request({
                     url: '/user/getFolloweeList',
                     params: {
-                        currentPage: this.currentPage
+                        currentPage: this.currentPage,
+                        userId: this.userId
                     }
                 }).then( res => {
                     this.followeeList = res.data.list;
@@ -56,7 +58,8 @@
                     url: '/home/profile/followee',
                     query: {
                         infoType: 'followee',
-                        currentPage: this.currentPage
+                        currentPage: this.currentPage,
+                        userId: this.userId
                     }
                 });
                 // this.currentPage = data;
@@ -64,6 +67,11 @@
             }
         },
         created() {
+            if(this.$route.query.userId == null){
+                this.$router.push('/home/index');
+                return;
+            }
+            this.userId = this.$route.query.userId;
             this.loadFollowees();
         }
     }

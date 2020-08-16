@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div id="about-user-wrap">
         <el-tabs v-model="activeName" @tab-click="handleClick" id="user-info-about">
             <el-tab-pane label="微博" name="blogs" class="pane">
                 <!--<BlogListWithTime :blog-list="blogList"/>-->
@@ -7,7 +7,9 @@
             <el-tab-pane label="关注" name="followee" class="pane"></el-tab-pane>
             <el-tab-pane label="粉丝" name="follower" class="pane"></el-tab-pane>
         </el-tabs>
-        <router-view/>
+        <transition name="el-fade-in-linear">
+            <router-view/>
+        </transition>
     </div>
 </template>
 
@@ -37,6 +39,12 @@
                 })
             }
         },
+        watch: {
+           '$route.query.infoType'(type){
+               console.log(type);
+               this.activeName = type;
+           }
+        },
         props: ['userId','isProfile'],
         created() {
             // request({
@@ -59,7 +67,6 @@
             }
             if(this.activeName == null){
                 this.activeName = 'blogs';
-                console.log(1);
                 this.$router.push({
                     path: '/user/blogs',
                     query: {
@@ -74,8 +81,12 @@
 </script>
 
 <style scoped lang="less">
-#user-info-about{
-    width: 800px;
+    #user-info-about{
+        width: 800px;
 
-}
+    }
+
+    #about-user-wrap{
+        width: 800px;
+    }
 </style>

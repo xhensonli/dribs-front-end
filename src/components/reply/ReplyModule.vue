@@ -1,11 +1,13 @@
 <template>
     <div class="comment-reply">
-        <el-input  :placeholder="placeHolder == null ?'输入回复':'回复 '+placeHolder+':'" v-model="reply"
+        <el-input  placeholder="输入回复" v-model="reply"
                    maxlength="300" show-word-limit
                    type="textarea" />
-        <el-button @click="sendReply" class="reply-submit" :disabled="reply == null ||reply.length === 0 || reply.length > 300">发送</el-button>
-        <el-button @click="reset" class="reply-reset">重置</el-button>
-        <reply-item v-for="(item,index) in replyList" :reply="item" @readyReply="readyReply" />
+        <el-button @click="sendReply(0)" class="reply-submit" :disabled="reply == null ||reply.length === 0 || reply.length > 300">发送</el-button>
+        <reply-item v-for="(item,index) in replyList" :reply="item" :blog-owner-id="blogOwnerId" :comment-id="commentId"
+            @deleteReply="deleteReply(index)"
+                    @addReply="addReply"
+        />
     </div>
 </template>
 
@@ -22,11 +24,9 @@
             return {
                 replyList: [],
                 reply: '',
-                replyeeId: 0,
-                placeHolder: null
             }
         },
-        props: ['commentId'],
+        props: ['commentId','blogOwnerId'],
         methods: {
             loadReplies(){
                 request({
@@ -44,7 +44,8 @@
                     this.$message.error('系统错误');
                 })
             },
-            sendReply(){
+            sendReply(id,content){
+
                 this.checkAndAction( () => {
                     if(this.reply == null ||this.reply.length === 0 || this.reply.length > 300){
                         this.$message.warning("请输1-300个字符");
@@ -56,13 +57,11 @@
                         data: {
                             commentId: this.commentId,
                             replyContent: this.reply,
-                            replyeeId: this.replyeeId
+                            replyeeId: 0
                         }
                     }).then( res => {
                         if(res.statusCode === '000000'){
                             this.reply = '';
-                            this.replyeeId = 0;
-                            this.placeHolder = null;
                             this.$message.success("发送成功");
                             this.loadReplies();
                             this.$emit('incReply');
@@ -74,14 +73,27 @@
                     })
                 }, this.$route.path, this.$route.query)
             },
-            readyReply(replyee){
-                this.replyeeId = replyee.userId;
-                this.placeHolder = replyee.userName;
+            addReply(){
+                this.loadReplies();
+                this.$emit('incReply');
             },
-            reset(){
-                this.reply = '';
-                this.placeHolder = null;
-                this.replyeeId = 0;
+            deleteReply(index){
+                request({
+                    url: 'reply/deleteReply',
+                    params: {
+                        commentId: this.commentId,
+                        replyId: this.replyList[index].replyId
+                    }
+                }).then( res => {
+                    if(res.statusCode === '000000'){
+                        this.$message.success("删除成功");
+                        this.replyList.splice(index,1);
+                    } else {
+                        this.$message.error(res.message);
+                    }
+                }).catch( err => {
+                    this.$message.error('系统错误');
+                })
             }
         },
         created() {
