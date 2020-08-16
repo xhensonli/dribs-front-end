@@ -1,6 +1,6 @@
 <template>
     <div id="profile-blogs" v-if="totalCount>0">
-        <BlogListWithTime :blog-list="blogList" :is-profile="$store.state.loginInfo.isLogin&&this.userId===$store.state.loginInfo.user.userId" v-loading="loadingBlogs"/>
+        <BlogListWithTime :blog-list="blogList" :is-profile="$store.state.loginInfo.isLogin&&userId===$store.state.loginInfo.user.userId" v-loading="loadingBlogs"/>
         <div class="page-bar" >
             <el-pagination
 
@@ -31,32 +31,24 @@
                 blogList: [],
                 currentPage: 1,
                 totalCount: 0,
-                userId: 0,
+                // userId: 0,
                 loadingBlogs: false
             }
         },
-        props: {
-
-        },
+        props: ['userId'],
         watch: {
-          '$route.query.userId'(v){
-              this.userId = Number(v);
+          userId(v){
               this.loadBLogs();
           }
         },
         methods: {
           changePage(data){
-              // this.currentPage = data;
-              this.$route.query.currentPage = data;
-              this.$router.push({
-                  url: '/home/user/blogs',
-                  query: this.$route.query
-              }).catch( err => {});
-              window.pageYOffset = document.documentElement.scrollTop = 0;
               this.loadBLogs();
+              window.pageYOffset = document.documentElement.scrollTop = 0;
           },
             loadBLogs(){
               this.loadingBlogs = true;
+                console.log("id"+this.userId);
                 request({
                     url: 'blog/getBlogListByUser',
                     method: 'POST',
@@ -80,23 +72,6 @@
             }
         },
         created() {
-            if(this.$route.query.currentPage == null){
-                this.$router.push({
-                    url: '/user/blogs',
-                    query: {
-                        infoType: 'blog',
-                        currentPage: 1,
-                        userId: this.$route.query.userId
-                    }
-                });
-            }
-            if(this.$route.query.userId == null){
-                this.$router.push("/home/index");
-                return;
-            }
-            this.userId = Number(this.$route.query.userId);
-            this.currentPage = this.$route.query.currentPage == null? 1: Number(this.$route.query.currentPage);
-            this.$route.query.currentPage = this.currentPage;
             this.loadBLogs();
         }
     }

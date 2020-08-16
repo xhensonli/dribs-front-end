@@ -30,11 +30,9 @@
         methods: {
             goUserInfo(){
                 this.$router.push({
-                    path: '/user/blogs',
+                    path: '/user',
                     query: {
-                        userId: this.user.userId,
-                        type: 'blogs',
-                        currentPage: 1
+                        userId: this.user.userId
                     }
                 })
             }

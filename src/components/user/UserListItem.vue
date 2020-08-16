@@ -28,11 +28,9 @@
         methods: {
             goUserInfo(){
                 this.$router.push({
-                    path: '/user/blogs',
+                    path: '/user',
                     query: {
                         userId: this.user.userId,
-                        infoType: 'blogs',
-                        currentPage: 1
                     }
                 })
             }

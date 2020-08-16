@@ -103,11 +103,9 @@
             },
             goUserInfo(){
                 this.$router.push({
-                    path: '/user/blogs',
+                    path: '/user',
                     query: {
-                        userId: this.replyer.userId,
-                        type: 'blogs',
-                        currentPage: 1
+                        userId: this.replyer.userId
                     }
                 })
             },

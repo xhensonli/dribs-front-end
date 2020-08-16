@@ -120,11 +120,9 @@ export default {
           // console.log("pro");
           this.checkAndAction( () => {
               this.$router.push({
-                  path: '/user/blogs',
+                  path: '/user',
                   query: {
-                      userId: this.$store.state.loginInfo.user.userId,
-                      infoType: 'blogs',
-                      currentPage: 1
+                      userId: this.$store.state.loginInfo.user.userId
                   }
               })
           }, this.$route.path, this.$route.query);

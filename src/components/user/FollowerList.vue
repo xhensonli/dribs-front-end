@@ -32,11 +32,16 @@
                 loading: false,
                 currentPage: 1,
                 totalCount: 0,
-                userId: 0
             }
         },
+        props: ['userId'],
         components: {
             UserListItem
+        },
+        watch: {
+            userId(){
+                this.loadFollowers();
+            }
         },
         methods: {
             loadFollowers(){
@@ -54,24 +59,12 @@
                 })
             },
             changePage(data){
-                this.$router.push({
-                    url: '/home/profile/follower',
-                    query: {
-                        infoType: 'follower',
-                        currentPage: this.currentPage,
-                        userId: this.userId
-                    }
-                });
-                // this.currentPage = data;
+
                 this.loadFollowers();
+                window.pageYOffset = document.documentElement.scrollTop = 0;
             }
         },
         created() {
-            if(this.$route.query.userId == null){
-                this.$router.push('/home/index');
-                return;
-            }
-            this.userId = this.$route.query.userId;
             this.loadFollowers();
         }
     }

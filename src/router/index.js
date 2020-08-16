@@ -92,20 +92,20 @@ Vue.use(VueRouter)
       meta: { auth: false},
       name: 'User',
       component: () => import("../components/user/UserController"),
-      children: [
-        {
-          path: 'blogs',
-          component: () => import("../components/user/ProfileBlogs")
-        },
-        {
-          path: 'followee',
-          component: () => import('../components/user/FolloweeList')
-        },
-        {
-          path: 'follower',
-          component: () => import('../components/user/FollowerList')
-        }
-      ]
+      // children: [
+      //   {
+      //     path: 'blogs',
+      //     component: () => import("../components/user/ProfileBlogs")
+      //   },
+      //   {
+      //     path: 'followee',
+      //     component: () => import('../components/user/FolloweeList')
+      //   },
+      //   {
+      //     path: 'follower',
+      //     component: () => import('../components/user/FollowerList')
+      //   }
+      // ]
     },
     {
       path: '/blogDetail',

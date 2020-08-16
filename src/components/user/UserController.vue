@@ -60,18 +60,19 @@
         },
         data(){
             return{
-                user: {
-                    userName: '',
-                    userAvatar: 'default.jpg',
-                    userLevel: 1,
-                    userInfo: {
-                        male: true,
-                        userDesc: null,
-                        followerCount: 0,
-                        followCount: 0,
-                        blogCount: 0
-                    }
-                },
+                // user: {
+                //     userName: '',
+                //     userAvatar: 'default.jpg',
+                //     userLevel: 1,
+                //     userInfo: {
+                //         male: true,
+                //         userDesc: null,
+                //         followerCount: 0,
+                //         followCount: 0,
+                //         blogCount: 0
+                //     }
+                // },
+                user: null,
                 loaded : false
             }
         }
