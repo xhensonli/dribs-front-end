@@ -3,7 +3,7 @@
     <el-col :span="16" >
         <div id="blog-detail-display"  >
             <BlogBriefInfo :blog="blog" :is-detail="true"
-                           :is-profile="$store.state.loginInfo.isLogin == true && blog.author.userId == $store.state.loginInfo.user.userId"
+                           :is-profile="$store.state.loginInfo.isLogin === true && blog.author.userId === $store.state.loginInfo.user.userId"
                            @toggleLike="toggleLike()"
             >
             </BlogBriefInfo>
@@ -122,6 +122,7 @@
                     if(res.statusCode === '000000'){
                         this.comment = null;
                         this.$message.success('评论成功');
+                        this.incExp(3);
                         this.loadCommentList();
                     } else {
                         this.$message.error(res.message);
@@ -179,16 +180,16 @@
                 this.$router.push("/home/index");
                 return;
             }
-            if(this.$route.query.currentPage == null ){
-                this.$router.push({
-                    path: this.$route.path,
-                    query: {
-                        blogId: this.$route.query.blogId,
-                        currentPage: 1
-                    }
-                })
-                return;
-            }
+            // if(this.$route.query.currentPage == null ){
+            //     this.$router.push({
+            //         path: this.$route.path,
+            //         query: {
+            //             blogId: this.$route.query.blogId,
+            //             currentPage: 1
+            //         }
+            //     })
+            //     return;
+            // }
             this.blogId = this.$route.query.blogId;
             this.loadBlogDetail();
             this.loadCommentList();

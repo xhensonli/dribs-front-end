@@ -11,13 +11,13 @@
                             background-color="#008080"
                             text-color="#fff"
                             active-text-color="#ffd04b">
-                      <el-menu-item @click="goIndex" >
+                      <el-menu-item @click="goIndex" index="1" >
                           <template slot="title">
                               <i class="icon-home"></i>
                               <span>首页</span>
                           </template>
                       </el-menu-item>
-                      <el-menu-item index="2">
+                      <el-menu-item index="2" @click="$router.push('/home/followeeBlogs')">
                           <template slot="title">
                               <i class="icon-friendfavor"></i>
                               <span>我的关注</span>
@@ -37,32 +37,40 @@
                           <el-menu-item @click="goProfile" >
                               我的主页
                           </el-menu-item>
-                          <el-menu-item @click="" >
+                          <el-menu-item @click="$router.push('/profile')" >
                               个人信息
                           </el-menu-item>
                       </el-submenu>
                   </el-menu>
               </div>
+              <div id="add-blog-btn-bar">
+                  <div id="add-blog-btn" @click="gePublish">
+                      <i class="icon-add"></i>
+                      写微博
+                  </div>
+              </div>
+              <div id="home-search">
+                  <div id="home-search-input">
+                      <el-input placeholder="输入搜索内容" prefix-icon="el-icon-search"    v-model="searchKey"/>
+                  </div>
+                  <div id="home-search-btn" @click="doSearch">
+                      <i class="icon-search"></i>
+                      搜索
+                  </div>
+              </div>
               <el-col :span="3" :push="12">
                   <el-popover trigger="hover" v-if="$store.state.loginInfo.isLogin">
-                      <div id="header-user-username">
-                          Lv.{{$store.state.loginInfo.user.userLevel}}
-                          {{$store.state.loginInfo.user.userName}}
-                          <i class="icon-male" v-if="$store.state.loginInfo.user.userInfo.male" style="color: dodgerblue"></i>
-                          <i class="icon-female" v-else style="color: hotpink"></i>
-                          <el-link @click="logout">注销登录</el-link>
-                      </div>
+                      <user-info-card/>
                       <el-avatar :size="48" slot="reference" :src="resourcePath+$store.state.loginInfo.user.userAvatar" style="margin-top:5px;"/>
                   </el-popover>
-                  <el-popover trigger="hover" v-else title="未登录">
-                      <el-link @click="toLogin">去登录</el-link>
-
+                  <el-popover trigger="hover" v-else>
+                      <guest-info-card/>
                       <el-avatar :size="48" slot="reference" :src="resourcePath+'default.jpg'" style="margin-top:5px;"/>
                   </el-popover>
               </el-col>
           </el-header>
       </div>
-      <div id="app-content">
+      <div id="app-content" class="clearfix">
           <router-view />
       </div>
 
@@ -77,6 +85,8 @@ import HelloWorld from './components/HelloWorld.vue'
 import RegisterController from "./components/register/RegisterController.vue"
 import LoginController from "./components/login/LoginController"
 import UserController from "./components/user/UserController"
+import UserInfoCard from "./components/user/UserInfoCard"
+import GuestInfoCard from "./components/user/GuestInfoCard"
 import {request} from "./network/request";
 
 export default {
@@ -86,8 +96,12 @@ export default {
     HelloWorld,
     RegisterController,
     LoginController,
-
+    UserInfoCard,
+    GuestInfoCard
   },
+    created(){
+        this.searchKey = this.$route.query.searchKey;
+    },
     mounted(){
         window.addEventListener("scroll",this.handleScroll);
         this.offsetTop = this.$refs.fixedBar.offsetTop;
@@ -95,10 +109,17 @@ export default {
     destroyed(){
         window.removeEventListener("scroll",this.handleScroll);
     },
+    watch: {
+      "$route.query.searchKey"(v){
+          this.searchKey = v;
+      }
+    },
   data() {
     return {
         value1: '',
-        isFix: false
+        isFix: false,
+        searchKey: '',
+        i:0
     }
   },
   methods: {
@@ -107,14 +128,10 @@ export default {
           // console.log(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
           this.isFix = scrollTop > 0;
       },
-      toLogin(){
-          this.$router.push({
-              path: '/login',
-              query: {
-                  nextPath: this.$route.path,
-                  pathQuery: this.$route.query
-              }
-          })
+      gePublish(){
+          this.checkAndAction(() =>{
+              this.$router.push('/publishBlog')
+          }, this.$route.path, this.$route.query)
       },
       goProfile(){
           // console.log("pro");
@@ -130,13 +147,16 @@ export default {
       goIndex(){
           this.$router.push("/home/index")
       },
-      logout(){
-          request({
-              url: 'user/logout'
-          }).then( res => {
-              console.log(res);
-          }).catch( err => {
-              console.log(err);
+      doSearch(){
+          if(this.searchKey == null || this.searchKey.length === 0){
+              return;
+          }
+          this.$router.push({
+              path: '/searchResult',
+              query: {
+                  searchKey: this.searchKey,
+                  i: ++this.i
+              }
           })
       }
   }
@@ -154,6 +174,9 @@ export default {
     overflow-x: hidden;
     #app-content {
         min-height: 705px;
+        /*background: url("http://lhxserver.top/resources/dribs/background/background.jpg");*/
+        background-color: rgba(0,128,128,.08);
+        padding-top: 10px;
     }
     #app-footer{
         background-color: teal;
@@ -169,7 +192,7 @@ export default {
         width: 100%;
         z-index: 5;
         background-color: teal;
-        margin-bottom: 10px;
+        /*margin-bottom: 10px;*/
         #menu-wrap{
             width: 600px;
             float: left;
@@ -177,6 +200,52 @@ export default {
                 margin-left: 5px;
                 margin-right: 10px;
                 color: #eee;
+            }
+        }
+
+        #add-blog-btn-bar{
+            float: left;
+            padding-top: 10px;
+            display: inline-block;
+            #add-blog-btn{
+                width: 90px;
+                height: 30px;
+                display: inline-block;
+                padding: 5px;
+                text-align: center;
+                line-height: 30px;
+                color: #eee;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #006666;
+                &:hover{
+                    background-color: #006f6f;
+                }
+            }
+
+        }
+
+        #home-search{
+            padding-top: 10px;
+            display: inline-block;
+            #home-search-input{
+                display: inline-block;
+                margin-right: 15px;
+            }
+            #home-search-btn{
+                width: 70px;
+                height: 30px;
+                display: inline-block;
+                padding: 5px;
+                text-align: center;
+                line-height: 30px;
+                color: #eee;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #006666;
+                &:hover{
+                    background-color: #006f6f;
+                }
             }
         }
     }

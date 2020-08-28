@@ -1,64 +1,50 @@
 <template>
-    <div id="view-blogs-controller">
-        <!--<el-header>-->
-            <!--<el-col :span="8" :push="2">-->
-                <!--<el-input-->
-                        <!--placeholder="请输入内容"-->
-                        <!--prefix-icon="el-icon-search"-->
-                        <!--v-model="search">-->
-                <!--</el-input>-->
-            <!--</el-col>-->
-
-            <!--<el-col :span="4" :push="3" >-->
-                <!--<el-button icon="el-icon-plus" type="primary" plain @click="publishBlog">-->
-                    <!--写微博-->
-                <!--</el-button>-->
-            <!--</el-col>-->
-        <!--</el-header>-->
+    <div id="followee-blog-wrap">
+        <!--<BlogDisplay v-for="(blog,index) in blogList" :blog-id="blog.blogId" :user="blog.author" :blog-content="blog.blogContent" :img-list="blog.imgs" :is-profile="false"-->
+                     <!--:is-repost="blog.repost" :repost-path="blog.repostPath" :source="blog.source" >-->
+            <!--<blog-info :blog="blog" />-->
+        <!--</BlogDisplay>-->
         <div class="followee-blog-item"  v-for="(blog,index) in blogList">
             <blog-brief-info :blog="blog" :is-detail="true" @toggleLike="toggleLike(blog)" />
         </div>
+
     </div>
 </template>
 
 <script>
     import {request} from "../../../network/request";
+    import BlogDisplay from "./BlogDisplay";
+    import BlogInfo from "./BlogInfo";
     import BlogBriefInfo from "./BlogBriefInfo"
     export default {
-        name: "viewBlogs",
+        name: "FolloweeBlogs",
         data(){
             return {
-                search: '',
                 currentPage: 1,
                 total: 0,
                 blogList: []
             }
         },
         components: {
+            BlogDisplay,
+            BlogInfo,
             BlogBriefInfo
         },
-        created(){
-            this.loadLatest();
-        },
         methods: {
-            publishBlog(){
-                // this.checkAndPushRouter("/home/index/publishBlog");
-                this.$router.push("/publishBlog");
-            },
-            loadLatest(){
+            loadBlogs(){
                 request({
-                    url: 'blog/getLatestBlogs',
+                    url: 'blog/getBlogListByFollow',
                     params: {
                         currentPage: this.currentPage
                     }
                 }).then( res => {
                     if(res.statusCode === '000000'){
                         this.blogList = res.data.list;
-                        this.total = res.total;
+                        this.total = res.data.total;
                     } else {
-                        this.$message.error(res.message);
+                        this.$message.error(res.message)
                     }
-                }).catch (err => {
+                }).catch( err => {
                     this.$message.error('系统错误');
                 })
             },
@@ -82,17 +68,22 @@
                     })
                 }, this.$route.path, this.$route.query)
             }
+        },
+        created() {
+            this.loadBlogs();
         }
     }
 </script>
 
-<style scoped>
-    #view-blogs-controller{
+<style scoped lang="less">
+
+    #followee-blog-wrap{
         width: 800px;
         margin: 0 25px 0 auto;
-    }
+        .followee-blog-item{
 
-    .followee-blog-item{
-        margin: 5px 0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
     }
 </style>

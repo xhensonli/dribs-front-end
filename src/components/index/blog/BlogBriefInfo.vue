@@ -66,7 +66,7 @@
                 })
             },
             repostBlog(){
-                this.$router.push("/home/index/repostBlog/"+this.blog.blogId)
+                this.$router.push("/repostBlog/"+this.blog.blogId)
             }
         }
     }

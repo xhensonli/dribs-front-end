@@ -4,10 +4,16 @@
                    maxlength="300" show-word-limit
                    type="textarea" />
         <el-button @click="sendReply(0)" class="reply-submit" :disabled="reply == null ||reply.length === 0 || reply.length > 300">发送</el-button>
-        <reply-item v-for="(item,index) in replyList" :reply="item" :blog-owner-id="blogOwnerId" :comment-id="commentId"
-            @deleteReply="deleteReply(index)"
-                    @addReply="addReply"
-        />
+        <div class="comment-reply-list">
+            <div v-show="replyList.length>0" class="reply-list-order">
+                <el-switch v-model="orderByTime" inactive-color="teal" active-text="按时间排序" inactive-text="按热度排序"/>
+            </div>
+            <reply-item v-for="(item,index) in replyList" :reply="item" :blog-owner-id="blogOwnerId" :comment-id="commentId"
+                        :key="item.replyId"
+                        @deleteReply="deleteReply(index)"
+                        @addReply="addReply"
+            />
+        </div>
     </div>
 </template>
 
@@ -24,7 +30,17 @@
             return {
                 replyList: [],
                 reply: '',
+                orderByTime: false,
             }
+        },
+        watch: {
+          orderByTime(value){
+              if(value){
+                  this.replyList.sort( (x,y)=>x.replyTime-y.replyTime);
+              } else {
+                  this.replyList.sort( (x,y) => y.likeCount-x.likeCount);
+              }
+          }
         },
         props: ['commentId','blogOwnerId'],
         methods: {
@@ -63,6 +79,7 @@
                         if(res.statusCode === '000000'){
                             this.reply = '';
                             this.$message.success("发送成功");
+                            this.incExp(3);
                             this.loadReplies();
                             this.$emit('incReply');
                         } else {
@@ -111,5 +128,12 @@
 
     .reply-submit, .reply-reset{
         margin: 10px;
+    }
+    .comment-reply-list{
+        max-height: 600px;
+        overflow-y: scroll;
+    }
+    .reply-list-order{
+        margin-left: 350px;
     }
 </style>

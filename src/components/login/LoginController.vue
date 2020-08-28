@@ -7,20 +7,22 @@
                 </el-form-item>
                 <el-form-item label="密码"  prop="userInfo.userPassword" >
                     <el-input v-model="loginInfo.userInfo.userPassword" show-password/>
+                    <el-link type="primary" id="forget-password-btn" @click="$router.push('/retrievePwd')">
+                        忘记密码
+                    </el-link>
                 </el-form-item>
+
                 <!--<el-col :span="24" >-->
                     <!--<el-button type="primary" :loading="loading" @click="login" >登录</el-button>-->
                 <!--</el-col>-->
                 <div id="login-submit" @click="login">
-                    <i class="el-icon-loading" v-show="loading"/>
+                    <i class="el-icon-loading" v-show="loading"></i>
                     登录
                 </div>
                 <div id="go-register-btn" @click="goRegister">
                     去注册
                 </div>
-                <div id="forget-password-btn">
-                    忘记密码
-                </div>
+
             </el-form>
         </el-col>
         <!--<el-input v-model="raw"/>-->
@@ -84,7 +86,7 @@
                             message: "登录成功",
                             type: 'success'
                         });
-                        this.$store.commit("doLogin");
+                        this.$store.commit("doLogin",res.data);
                         if(this.$route.query.nextPath != null){
                             this.$router.push({
                                 path: this.$route.query.nextPath,
@@ -113,6 +115,7 @@
         height: 500px;
         padding-top: 50px;
         box-sizing: border-box;
+        background-color: #f7f7f7;
         position: absolute;
         left: 0;
         right: 0;
@@ -121,7 +124,7 @@
         margin: auto;
         border-radius: 5px;
         box-shadow: 0 0 100px #888;
-        #login-submit,#forget-password-btn,#go-register-btn{
+        #login-submit{
             margin-top: 30px;
             width: 100%;
             height: 40px;
@@ -133,6 +136,20 @@
             cursor: pointer;
             &:hover{
                 background-color: #007070;
+            }
+        }
+        #go-register-btn{
+            margin-top: 30px;
+            width: 100%;
+            height: 40px;
+            color: #eee;
+            text-align: center;
+            line-height: 40px;
+            background-color: #999;
+            border-radius: 5px;
+            cursor: pointer;
+            &:hover{
+                background-color: #aaa;
             }
         }
     }

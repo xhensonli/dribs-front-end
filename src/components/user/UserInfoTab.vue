@@ -1,6 +1,6 @@
 <template>
     <div class="user-info-tab" >
-        <el-avatar :src="resourcePath+user.userAvatar"/>
+        <el-avatar :src="resourcePath+user.userAvatar" @click="goUser"/>
         <span >Lv.{{user.userLevel}} {{user.userName}}</span>
 
 
@@ -13,7 +13,14 @@
         name: "UserInfoTab",
         props: ['user','isProfile'],
         methods: {
-
+            goUser(){
+                this.$router.push({
+                    path: '/user',
+                    query: {
+                        userId: this.user.userId
+                    }
+                })
+            }
         }
     }
 </script>

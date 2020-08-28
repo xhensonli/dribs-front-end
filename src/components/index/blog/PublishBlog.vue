@@ -1,5 +1,5 @@
 <template>
-    <el-col :span="12" :push="2">
+    <el-col :span="12" :push="5">
         <slot></slot>
         <el-form>
             <el-form-item label="内容">
@@ -10,10 +10,11 @@
                         class="upload-demo"
                         :limit="4"
                         drag
-                        action="http://localhost:8080/dribs/blog/uploadBlogImg"
+                        :action="apiPath+'blog/uploadBlogImg'"
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
                         :on-success="onSuccess"
+                        :before-upload="beforeUpload"
                         name = "blogImg"
                         with-credentials
                         :file-list="fileList"
@@ -30,7 +31,6 @@
                 <el-button type="primary" plain @click="commitBlog">发布</el-button>
             </el-form-item>
         </el-form>
-        {{blog.imgs}}
     </el-col>
 
 </template>
@@ -79,6 +79,7 @@
                     this.preBlogId = this.preBlog.blogId;
                     if(this.preBlog.source == null ||this.preBlog.source.blogId === 0){
                         this.sourceId = this.preBlog.blogId;
+                        this.$store.commit('updateBlogCount',1);
                     } else {
                         this.sourceId = this.preBlog.source.blogId;
                         this.blog.repostPath.unshift({
@@ -104,13 +105,14 @@
                             message: "发布成功",
                             type: 'success'
                         });
+                        this.incExp(10);
+                        this.$router.push("/home/index")
                     } else {
                         this.$message.error(res.message);
                     }
                 });
             },
             handleRemove(file, fileList) {
-                console.log(file);
                 request({
                     url: 'blog/deleteBlogImg',
                     method: 'POST',
@@ -127,31 +129,30 @@
                 });
             },
             handlePreview(file) {
-                console.log(file);
+                // console.log(file);
             },
             onSuccess(response, file, fileList){
-                file.name = response.data;
-                file.url = this.blogImgPath+file.name;
-                this.blog.imgs.push(response.data);
-                console.log(fileList);
+                if(response.statusCode === '000000'){
+                    file.name = response.data;
+                    file.url = this.blogImgPath+file.name;
+                    this.blog.imgs.push(response.data);
+                } else {
+                    this.$message.error('上传失败');
+                    fileList.splice(fileList.length-1,1);
+                }
+
             },
             onChange(e){
                 console.log(e);
             },
-            sendFile(params){
-
-                let formData = new FormData();
-                let fl = params.file;
-                formData.append("blogImg",fl);
-                fileRequest({
-                    url: 'blog/uploadBlogImg',
-                    method: 'POST',
-                    data: formData,
-                }).then( res => {
-                    if(res.statusCode === '000000'){
-                        this.onSuccess(res,fl);
+            beforeUpload(file){
+                // const isJPG = file.type === 'image/jpeg';
+                this.checkAndAction( () => {
+                    if(file.type!=='image/png'&&file.type!=='image/jpeg'){
+                        this.$message.error('只能上传jpg或png文件');
+                        return false;
                     }
-                })
+                },this.$route.path,this.$route.query);
             }
         }
     }

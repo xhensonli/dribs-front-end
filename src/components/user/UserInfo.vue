@@ -8,6 +8,17 @@
             Lv.{{user.userLevel}} {{user.userName}}
             <i class="icon-male" v-if="user.userInfo.male" style="color: dodgerblue"></i>
             <i class="icon-female" v-else style="color: hotpink"></i>
+            <span id="user-info-followed" v-if="!$store.state.loginInfo.isLogin||$store.state.loginInfo.user.userId !== user.userId">
+                <el-button size="mini" type="primary" v-if="!user.isFollowed" @click="follow">
+                    <i class="icon-friendadd"></i>
+                    关注
+                </el-button>
+                <el-button size="mini" type="primary" v-else @click="cancelFollow">
+                    <i class="icon-friendaddfill"></i>
+                    取消关注
+                </el-button>
+            </span>
+
         </div>
         <div id="user-info-userdesc">{{desc}}</div>
         <el-row :gutter="10" class="user-info-detail">
@@ -31,6 +42,7 @@
 </template>
 
 <script>
+    import {request} from "../../network/request";
 
     export default {
         name: "UserInfo",
@@ -49,6 +61,46 @@
                 } else {
                     return (count/100000000).toFixed(1)+'亿';
                 }
+            },
+            follow(){
+                this.checkAndAction(() => {
+                    request({
+                        url: 'user/addFollow',
+                        params: {
+                            userId: this.user.userId
+                        }
+                    }).then( res => {
+                        if(res.statusCode === '000000'){
+                            this.user.isFollowed = true;
+                            this.$message.success('关注成功');
+                            this.$store.commit('updateFollowCount',1);
+                        } else {
+                            this.$message.error(res.message);
+                        }
+                    }).catch( err => {
+                        this.$message.error('系统错误');
+                    })
+                },this.$route.path,this.$route.query)
+            },
+            cancelFollow(){
+                this.checkAndAction(() => {
+                    request({
+                        url: 'user/removeFollow',
+                        params: {
+                            userId: this.user.userId
+                        }
+                    }).then( res => {
+                        if(res.statusCode === '000000'){
+                            this.user.isFollowed = false;
+                            this.$message.success('取关成功');
+                            this.$store.commit('updateFollowCount',-1);
+                        } else {
+                            this.$message.error(res.message);
+                        }
+                    }).catch( err => {
+                        this.$message.error('系统错误');
+                    })
+                },this.$route.path,this.$route.query)
             }
         },
         computed: {
@@ -70,6 +122,7 @@
     width: 800px;
     height: 300px;
     position: relative;
+    overflow: hidden;
     background-color: rgba(0,0,0,.3);
 
     #user-info-bg{
@@ -102,6 +155,10 @@
         text-align: center;
         font-size: 24px;
         color: #eee;
+
+        #user-info-followed{
+            margin-left: 16px;
+        }
     }
 
     #user-info-userdesc{

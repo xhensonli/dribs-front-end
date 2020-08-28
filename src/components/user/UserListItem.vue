@@ -50,6 +50,7 @@
         line-height: 40px;
         cursor: pointer;
         transition: 0.5s;
+        background-color: #eee;
         &:hover{
             zoom: 1.02;
         }

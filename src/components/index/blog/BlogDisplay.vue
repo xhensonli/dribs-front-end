@@ -33,7 +33,7 @@
                 <blog-content :content="blogContent"></blog-content>
                 <el-link v-for="img in imgList" type="primary" @click.stop="openImg(img)">[查看图片]</el-link>
                 <span v-for="item in repostPath">
-                    //<el-link type="primary">{{item.userName}}</el-link>:
+                    //<el-link type="primary" @click="toUser(item.userId)">{{item.userName}}</el-link>:
                     <blog-content :content="item.blogContent"></blog-content>
                     <el-link v-for="img in item.imgs" type="primary" @click.stop="openImg(img)">[查看图片]</el-link>
                 </span>
@@ -95,6 +95,14 @@
                         if(action === 'confirm'){
                             this.$emit("onDelete");
                         }
+                    }
+                })
+            },
+            toUser(id){
+                this.$router.push({
+                    path: '/user',
+                    query: {
+                        userId: id
                     }
                 })
             }

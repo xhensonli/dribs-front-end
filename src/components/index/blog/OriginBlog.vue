@@ -1,7 +1,9 @@
 <template>
     <div class="source-blog-wrap">
-        <div class="source-blog"  @click="showBlogDetail"  v-if="sourceBlog!=null" >
-            <div class="origin-username">{{sourceBlog.author.userName}} :</div>
+        <div class="source-blog"  @click.stop="showBlogDetail"  v-if="sourceBlog!=null" >
+            <div class="origin-username">
+                <el-link type="primary" @click.stop="toUser">{{sourceBlog.author.userName}}</el-link>
+                :</div>
             <div class="origin-content" @click.stop="">
                 <BlogContent :content="sourceBlog.blogContent"></BlogContent>
             </div>
@@ -27,9 +29,17 @@
         methods: {
             showBlogDetail(){
                 this.$router.push({
-                    path: '/home/index/blogDetail',
+                    path: '/blogDetail',
                     query: {
                         blogId: this.sourceBlog.blogId
+                    }
+                })
+            },
+            toUser(){
+                this.$router.push({
+                    path: 'user',
+                    query: {
+                        userId: this.sourceBlog.author.userId
                     }
                 })
             }

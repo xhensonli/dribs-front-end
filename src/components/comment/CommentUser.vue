@@ -44,7 +44,7 @@
     .comment-user{
         height: 50px;
         /*background-color: #eee;*/
-        float: left;
+        /*float: left;*/
         div{
             float: left;
             margin-left: 10px;

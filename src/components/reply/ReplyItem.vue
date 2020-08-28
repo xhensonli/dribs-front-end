@@ -70,6 +70,7 @@
                         if(res.statusCode === '000000'){
                             this.$message.success("发送成功");
                             this.replyContent = '';
+                            this.incExp(3);
                             this.$emit('addReply');
                         } else {
                             this.$message.error(res.message);

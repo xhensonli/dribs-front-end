@@ -1,18 +1,19 @@
 <template>
     <div id="about-user-wrap">
         <el-tabs v-model="activeName" @tab-click="handleClick" id="user-info-about">
-            <el-tab-pane label="微博" name="blogs" class="pane">
+            <el-tab-pane label="微博" name="blogs" class="pane" @click="showBlogs">
                 <!--<BlogListWithTime :blog-list="blogList"/>-->
-                <profile-blogs :user-id="userId"/>
+                <!--<profile-blogs :user-id="userId"/>-->
             </el-tab-pane>
-            <el-tab-pane label="关注" name="followee" class="pane">
-                <followee-list :user-id="userId"/>
+            <el-tab-pane label="关注" name="followee" class="pane" @click="showFollowee">
+                <!--<followee-list :user-id="userId"/>-->
             </el-tab-pane>
 
-            <el-tab-pane label="粉丝" name="follower" class="pane">
-                <follower-list :user-id="userId"/>
+            <el-tab-pane label="粉丝" name="follower" class="pane" @click="showFollower">
+                <!--<follower-list :user-id="userId"/>-->
             </el-tab-pane>
         </el-tabs>
+            <comment :is="currentComponent" :user-id="userId"/>
 
         <!--<transition name="el-fade-in-linear">-->
             <!--<router-view/>-->
@@ -25,15 +26,18 @@
     import ProfileBlogs from "./ProfileBlogs"
     import FolloweeList from "./FolloweeList"
     import FollowerList from "./FollowerList"
+    import Comment from "../comment/Comment";
     export default {
         name: "AboutUser",
         data(){
             return {
                 activeName: 'blogs',
-                blogList: []
+                blogList: [],
+                currentComponent: ProfileBlogs
             }
         },
         components: {
+            Comment,
             BlogListWithTime,
             ProfileBlogs,
             FolloweeList,
@@ -41,16 +45,26 @@
         },
         methods: {
             handleClick(data){
-                // console.log(data.name);
-                // this.$router.push({
-                //     path: '/user/'+data.name,
-                //     query: {
-                //         infoType: data.name,
-                //         currentPage: 1,
-                //         userId: this.userId
-                //     }
-                // })
+                if(data.name === 'blogs'){
+                   this.showBlogs();
+               } else if(data.name === 'followee'){
+                   this.showFollowee();
+               } else if(data.name === 'follower'){
+                   this.showFollower()
+               }
                 this.activeName = data.name
+            },
+            showBlogs(){
+                console.log(1);
+                this.currentComponent = ProfileBlogs;
+            },
+            showFollowee(){
+                console.log(2);
+                this.currentComponent = FolloweeList;
+            },
+            showFollower(){
+                console.log(3);
+                this.currentComponent = FollowerList;
             }
         },
         watch: {
@@ -60,6 +74,7 @@
            // }
             userId(){
                 this.activeName = 'blogs';
+                this.currentComponent = ProfileBlogs;
             }
         },
         props: ['userId','isProfile'],
